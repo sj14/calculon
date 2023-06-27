@@ -1,6 +1,9 @@
 # Calculon
 
-A basic, open-source, cross-platform, and "note-style" Calculator application inspired by [Numi](https://numi.app/).
+A basic, open-source, cross-platform, and "note-style" calculator inspired by [Numi](https://numi.app/).
+
+> **Warning**
+> The Windows executable does not work yet, please install a Java Runtime and use the Calculon JAR file.
 
 ![sceenshot](assets/screenshot.png)
 

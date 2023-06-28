@@ -57,21 +57,10 @@ public class Calculon extends javax.swing.JFrame {
         jSplitPane1.setDividerSize(1);
 
         expressionsTextArea.setColumns(1);
-        expressionsTextArea.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                expressionsTextAreaCaretUpdate(evt);
-            }
-        });
+        expressionsTextArea.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         expressionsTextArea.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 expressionsTextAreaFocusGained(evt);
-            }
-        });
-        expressionsTextArea.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-            }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                expressionsTextAreaInputMethodTextChanged(evt);
             }
         });
         expressionsTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -87,6 +76,7 @@ public class Calculon extends javax.swing.JFrame {
 
         resultsTextArea.setEditable(false);
         resultsTextArea.setColumns(1);
+        resultsTextArea.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         jScrollPane2.setViewportView(resultsTextArea);
         resultsTextArea.getAccessibleContext().setAccessibleName("");
 
@@ -182,12 +172,6 @@ public class Calculon extends javax.swing.JFrame {
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
-
-    private void expressionsTextAreaInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_expressionsTextAreaInputMethodTextChanged
-    }//GEN-LAST:event_expressionsTextAreaInputMethodTextChanged
-
-    private void expressionsTextAreaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_expressionsTextAreaCaretUpdate
-    }//GEN-LAST:event_expressionsTextAreaCaretUpdate
 
     private void expressionsTextAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_expressionsTextAreaKeyReleased
         setResults();

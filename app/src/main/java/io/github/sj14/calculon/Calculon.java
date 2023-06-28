@@ -53,8 +53,8 @@ public class Calculon extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Calculon");
 
-        jSplitPane1.setDividerLocation(300);
-        jSplitPane1.setDividerSize(1);
+        jSplitPane1.setDividerLocation(250);
+        jSplitPane1.setDividerSize(3);
 
         expressionsTextArea.setColumns(1);
         expressionsTextArea.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
@@ -152,7 +152,7 @@ public class Calculon extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                     .addComponent(statusBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );

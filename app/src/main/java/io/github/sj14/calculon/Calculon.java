@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 public class Calculon extends javax.swing.JFrame {
@@ -29,11 +28,11 @@ public class Calculon extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane1 = new javax.swing.JSplitPane();
+        splitPane = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        expressionsTextArea = new javax.swing.JTextArea();
+        expressionsTextPane = new javax.swing.JTextPane();
         jScrollPane2 = new javax.swing.JScrollPane();
-        resultsTextArea = new javax.swing.JTextArea();
+        resultsTextPane = new javax.swing.JTextPane();
         statusBar = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -53,34 +52,24 @@ public class Calculon extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Calculon");
 
-        jSplitPane1.setDividerLocation(250);
-        jSplitPane1.setDividerSize(3);
+        splitPane.setDividerLocation(250);
+        splitPane.setDividerSize(3);
 
-        expressionsTextArea.setColumns(1);
-        expressionsTextArea.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
-        expressionsTextArea.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                expressionsTextAreaFocusGained(evt);
-            }
-        });
-        expressionsTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+        expressionsTextPane.setFont(expressionsTextPane.getFont().deriveFont((float)14));
+        expressionsTextPane.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                expressionsTextAreaKeyReleased(evt);
+                expressionsTextPaneKeyReleased(evt);
             }
         });
-        jScrollPane1.setViewportView(expressionsTextArea);
+        jScrollPane1.setViewportView(expressionsTextPane);
 
-        jSplitPane1.setLeftComponent(jScrollPane1);
+        splitPane.setLeftComponent(jScrollPane1);
 
-        jScrollPane2.setPreferredSize(new java.awt.Dimension(100, 23));
+        resultsTextPane.setEditable(false);
+        resultsTextPane.setFont(resultsTextPane.getFont().deriveFont((float)14));
+        jScrollPane2.setViewportView(resultsTextPane);
 
-        resultsTextArea.setEditable(false);
-        resultsTextArea.setColumns(1);
-        resultsTextArea.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
-        jScrollPane2.setViewportView(resultsTextArea);
-        resultsTextArea.getAccessibleContext().setAccessibleName("");
-
-        jSplitPane1.setRightComponent(jScrollPane2);
+        splitPane.setRightComponent(jScrollPane2);
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
@@ -152,7 +141,7 @@ public class Calculon extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
+                    .addComponent(splitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                     .addComponent(statusBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -160,7 +149,7 @@ public class Calculon extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                .addComponent(splitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusBar)
                 .addContainerGap())
@@ -173,13 +162,9 @@ public class Calculon extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
-    private void expressionsTextAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_expressionsTextAreaKeyReleased
+    private void expressionsTextPaneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_expressionsTextPaneKeyReleased
         setResults();
-    }//GEN-LAST:event_expressionsTextAreaKeyReleased
-
-    private void expressionsTextAreaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_expressionsTextAreaFocusGained
-        setResults();
-    }//GEN-LAST:event_expressionsTextAreaFocusGained
+    }//GEN-LAST:event_expressionsTextPaneKeyReleased
 
     public static void main(String args[]) {
         try {
@@ -197,7 +182,7 @@ public class Calculon extends javax.swing.JFrame {
                 oldHistory.append(h).append(System.lineSeparator());
             }
             oldHistory.setLength(oldHistory.length() - 1); // remove last line break
-            app.expressionsTextArea.setText(oldHistory.toString());
+            app.expressionsTextPane.setText(oldHistory.toString());
         } catch (Exception ex) {
             Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -206,7 +191,8 @@ public class Calculon extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                app.resultsTextArea.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                app.setResults();
+                app.resultsTextPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                 app.statusBar.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                 app.pack();
                 app.setLocationRelativeTo(null);
@@ -217,7 +203,7 @@ public class Calculon extends javax.swing.JFrame {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 try (PrintWriter out = new PrintWriter(historyPath().toString())) {
-                    out.println(app.expressionsTextArea.getText().strip());
+                    out.println(app.expressionsTextPane.getText().strip());
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -228,7 +214,7 @@ public class Calculon extends javax.swing.JFrame {
     private void setResults() {
         // needs to be "\n" instead of  System.lineSeparator() as sometimes it 
         // only adds "\n" instead of "\n\r" on windows too and then it won't match.
-        String[] expressionsArray = expressionsTextArea.getText().split("\n");
+        String[] expressionsArray = expressionsTextPane.getText().split("\n");
 
         double sum = 0;
         int entries = 0;
@@ -247,7 +233,7 @@ public class Calculon extends javax.swing.JFrame {
                 results.append(System.lineSeparator());
             }
         }
-        resultsTextArea.setText(results.toString());
+        resultsTextPane.setText(results.toString());
         statusBar.setText(String.format("entries: %d sum: %.2f", entries, sum));
     }
 
@@ -280,18 +266,18 @@ public class Calculon extends javax.swing.JFrame {
     private javax.swing.JMenuItem deleteMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JTextArea expressionsTextArea;
+    private javax.swing.JTextPane expressionsTextPane;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pasteMenuItem;
-    private javax.swing.JTextArea resultsTextArea;
+    private javax.swing.JTextPane resultsTextPane;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JSplitPane splitPane;
     private javax.swing.JLabel statusBar;
     // End of variables declaration//GEN-END:variables
 }

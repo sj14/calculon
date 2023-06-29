@@ -26,7 +26,6 @@
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="cutMenuItem1">
           <Properties>
-            <Property name="mnemonic" type="int" value="116"/>
             <Property name="text" type="java.lang.String" value="Cut"/>
           </Properties>
           <Events>
@@ -35,7 +34,6 @@
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="copyMenuItem1">
           <Properties>
-            <Property name="mnemonic" type="int" value="121"/>
             <Property name="text" type="java.lang.String" value="Copy"/>
           </Properties>
           <Events>
@@ -44,7 +42,6 @@
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="pasteMenuItem1">
           <Properties>
-            <Property name="mnemonic" type="int" value="112"/>
             <Property name="text" type="java.lang.String" value="Paste"/>
           </Properties>
           <Events>

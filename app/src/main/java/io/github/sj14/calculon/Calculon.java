@@ -74,7 +74,6 @@ public class Calculon extends javax.swing.JFrame {
         });
         rightClickMenu.add(redoMenuItem);
 
-        cutMenuItem1.setMnemonic('t');
         cutMenuItem1.setText("Cut");
         cutMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -83,7 +82,6 @@ public class Calculon extends javax.swing.JFrame {
         });
         rightClickMenu.add(cutMenuItem1);
 
-        copyMenuItem1.setMnemonic('y');
         copyMenuItem1.setText("Copy");
         copyMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -92,7 +90,6 @@ public class Calculon extends javax.swing.JFrame {
         });
         rightClickMenu.add(copyMenuItem1);
 
-        pasteMenuItem1.setMnemonic('p');
         pasteMenuItem1.setText("Paste");
         pasteMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

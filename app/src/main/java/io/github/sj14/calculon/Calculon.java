@@ -131,7 +131,7 @@ public class Calculon extends javax.swing.JFrame {
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
 
-        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, MASK));
+        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, SHORTCUT_MODIFIER));
         saveMenuItem.setMnemonic('s');
         saveMenuItem.setText("Save");
         saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -234,7 +234,7 @@ public class Calculon extends javax.swing.JFrame {
     }//GEN-LAST:event_redoMenuItemActionPerformed
 
     private static final UndoManager undoManager = new UndoManager();
-    private static final int MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+    private static final int SHORTCUT_MODIFIER = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 
     public static void main(String args[]) {
         try {
@@ -291,7 +291,7 @@ public class Calculon extends javax.swing.JFrame {
             }
         });
 
-        textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, MASK), "Undo");
+        textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, SHORTCUT_MODIFIER), "Undo");
 
         textComponent.getActionMap().put("Undo", new AbstractAction("Undo") {
             @Override
@@ -318,7 +318,7 @@ public class Calculon extends javax.swing.JFrame {
                 }
             }
         });
-        textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, MASK), "Redo");
+        textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, SHORTCUT_MODIFIER), "Redo");
     }
 
     private static void saveHistory(String content) {

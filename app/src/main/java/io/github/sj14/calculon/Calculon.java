@@ -52,9 +52,9 @@ public class Calculon extends javax.swing.JFrame {
         splitPane.setDividerSize(3);
 
         expressionsTextPane.setFont(expressionsTextPane.getFont().deriveFont((float)14));
-        expressionsTextPane.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                expressionsTextPaneKeyReleased(evt);
+        expressionsTextPane.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                expressionsTextPaneCaretUpdate(evt);
             }
         });
         jScrollPane1.setViewportView(expressionsTextPane);
@@ -165,10 +165,6 @@ public class Calculon extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
-    private void expressionsTextPaneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_expressionsTextPaneKeyReleased
-        setResults();
-    }//GEN-LAST:event_expressionsTextPaneKeyReleased
-
     private void cutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cutMenuItemActionPerformed
         expressionsTextPane.cut();
     }//GEN-LAST:event_cutMenuItemActionPerformed
@@ -184,6 +180,10 @@ public class Calculon extends javax.swing.JFrame {
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
         saveHistory(expressionsTextPane.getText().strip());
     }//GEN-LAST:event_saveMenuItemActionPerformed
+
+    private void expressionsTextPaneCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_expressionsTextPaneCaretUpdate
+        setResults();
+    }//GEN-LAST:event_expressionsTextPaneCaretUpdate
 
     public static void main(String args[]) {
         try {

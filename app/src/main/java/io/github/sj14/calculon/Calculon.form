@@ -170,7 +170,7 @@
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="expressionsTextPaneKeyReleased"/>
+                <EventHandler event="caretUpdate" listener="javax.swing.event.CaretListener" parameters="javax.swing.event.CaretEvent" handler="expressionsTextPaneCaretUpdate"/>
               </Events>
             </Component>
           </SubComponents>

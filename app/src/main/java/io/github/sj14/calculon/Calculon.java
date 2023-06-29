@@ -223,6 +223,7 @@ public class Calculon extends javax.swing.JFrame {
         });
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
             public void run() {
                 saveHistory(app.expressionsTextPane.getText().strip());
             }

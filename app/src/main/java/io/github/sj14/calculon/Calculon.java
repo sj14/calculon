@@ -131,6 +131,7 @@ public class Calculon extends javax.swing.JFrame {
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
 
+        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, MASK));
         saveMenuItem.setMnemonic('s');
         saveMenuItem.setText("Save");
         saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -287,7 +288,6 @@ public class Calculon extends javax.swing.JFrame {
             @Override
             public void undoableEditHappened(UndoableEditEvent e) {
                 undoManager.addEdit(e.getEdit());
-                Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, e);
             }
         });
 

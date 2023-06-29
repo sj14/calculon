@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.undo.UndoManager;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 public class Calculon extends javax.swing.JFrame {
@@ -29,6 +32,8 @@ public class Calculon extends javax.swing.JFrame {
     private void initComponents() {
 
         rightClickMenu = new javax.swing.JPopupMenu();
+        undoMenuItem = new javax.swing.JMenuItem();
+        redoMenuItem = new javax.swing.JMenuItem();
         cutMenuItem1 = new javax.swing.JMenuItem();
         copyMenuItem1 = new javax.swing.JMenuItem();
         pasteMenuItem1 = new javax.swing.JMenuItem();
@@ -44,6 +49,22 @@ public class Calculon extends javax.swing.JFrame {
         exitMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
+
+        undoMenuItem.setText("Undo");
+        undoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoMenuItemActionPerformed(evt);
+            }
+        });
+        rightClickMenu.add(undoMenuItem);
+
+        redoMenuItem.setText("Redo");
+        redoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                redoMenuItemActionPerformed(evt);
+            }
+        });
+        rightClickMenu.add(redoMenuItem);
 
         cutMenuItem1.setMnemonic('t');
         cutMenuItem1.setText("Cut");
@@ -187,6 +208,24 @@ public class Calculon extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_expressionsTextPaneMouseReleased
 
+    private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoMenuItemActionPerformed
+        try {
+            undoManager.undo();
+        } catch (Exception ex) {
+            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_undoMenuItemActionPerformed
+
+    private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redoMenuItemActionPerformed
+        try {
+            undoManager.redo();
+        } catch (Exception ex) {
+            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_redoMenuItemActionPerformed
+
+    private static final UndoManager undoManager = new UndoManager();
+
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -196,6 +235,7 @@ public class Calculon extends javax.swing.JFrame {
 
         Calculon app = new Calculon();
 
+        // Read History
         try {
             List<String> read = Files.readAllLines(historyPath());
             StringBuilder oldHistory = new StringBuilder();
@@ -207,6 +247,15 @@ public class Calculon extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        // Add undo and redo function
+        app.expressionsTextPane.getDocument().addUndoableEditListener(new UndoableEditListener() {
+            @Override
+            public void undoableEditHappened(UndoableEditEvent e) {
+                undoManager.addEdit(e.getEdit());
+                Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, e);
+            }
+        });
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -296,10 +345,12 @@ public class Calculon extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem pasteMenuItem1;
+    private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JTextPane resultsTextPane;
     private javax.swing.JPopupMenu rightClickMenu;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JSplitPane splitPane;
     private javax.swing.JLabel statusBar;
+    private javax.swing.JMenuItem undoMenuItem;
     // End of variables declaration//GEN-END:variables
 }

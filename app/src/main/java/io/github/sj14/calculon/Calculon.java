@@ -28,6 +28,10 @@ public class Calculon extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        rightClickMenu = new javax.swing.JPopupMenu();
+        cutMenuItem1 = new javax.swing.JMenuItem();
+        copyMenuItem1 = new javax.swing.JMenuItem();
+        pasteMenuItem1 = new javax.swing.JMenuItem();
         splitPane = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         expressionsTextPane = new javax.swing.JTextPane();
@@ -38,12 +42,35 @@ public class Calculon extends javax.swing.JFrame {
         fileMenu = new javax.swing.JMenu();
         saveMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
-        cutMenuItem = new javax.swing.JMenuItem();
-        copyMenuItem = new javax.swing.JMenuItem();
-        pasteMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
+
+        cutMenuItem1.setMnemonic('t');
+        cutMenuItem1.setText("Cut");
+        cutMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cutMenuItem1ActionPerformed(evt);
+            }
+        });
+        rightClickMenu.add(cutMenuItem1);
+
+        copyMenuItem1.setMnemonic('y');
+        copyMenuItem1.setText("Copy");
+        copyMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                copyMenuItem1ActionPerformed(evt);
+            }
+        });
+        rightClickMenu.add(copyMenuItem1);
+
+        pasteMenuItem1.setMnemonic('p');
+        pasteMenuItem1.setText("Paste");
+        pasteMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteMenuItem1ActionPerformed(evt);
+            }
+        });
+        rightClickMenu.add(pasteMenuItem1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Calculon");
@@ -55,6 +82,11 @@ public class Calculon extends javax.swing.JFrame {
         expressionsTextPane.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 expressionsTextPaneCaretUpdate(evt);
+            }
+        });
+        expressionsTextPane.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                expressionsTextPaneMouseReleased(evt);
             }
         });
         jScrollPane1.setViewportView(expressionsTextPane);
@@ -90,41 +122,6 @@ public class Calculon extends javax.swing.JFrame {
         fileMenu.add(exitMenuItem);
 
         menuBar.add(fileMenu);
-
-        editMenu.setMnemonic('e');
-        editMenu.setText("Edit");
-
-        cutMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        cutMenuItem.setMnemonic('t');
-        cutMenuItem.setText("Cut");
-        cutMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cutMenuItemActionPerformed(evt);
-            }
-        });
-        editMenu.add(cutMenuItem);
-
-        copyMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        copyMenuItem.setMnemonic('y');
-        copyMenuItem.setText("Copy");
-        copyMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                copyMenuItemActionPerformed(evt);
-            }
-        });
-        editMenu.add(copyMenuItem);
-
-        pasteMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        pasteMenuItem.setMnemonic('p');
-        pasteMenuItem.setText("Paste");
-        pasteMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pasteMenuItemActionPerformed(evt);
-            }
-        });
-        editMenu.add(pasteMenuItem);
-
-        menuBar.add(editMenu);
 
         helpMenu.setMnemonic('h');
         helpMenu.setText("Help");
@@ -165,18 +162,6 @@ public class Calculon extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
-    private void cutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cutMenuItemActionPerformed
-        expressionsTextPane.cut();
-    }//GEN-LAST:event_cutMenuItemActionPerformed
-
-    private void copyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyMenuItemActionPerformed
-        expressionsTextPane.copy();
-    }//GEN-LAST:event_copyMenuItemActionPerformed
-
-    private void pasteMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteMenuItemActionPerformed
-        expressionsTextPane.paste();
-    }//GEN-LAST:event_pasteMenuItemActionPerformed
-
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
         saveHistory(expressionsTextPane.getText().strip());
     }//GEN-LAST:event_saveMenuItemActionPerformed
@@ -184,6 +169,24 @@ public class Calculon extends javax.swing.JFrame {
     private void expressionsTextPaneCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_expressionsTextPaneCaretUpdate
         setResults();
     }//GEN-LAST:event_expressionsTextPaneCaretUpdate
+
+    private void cutMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cutMenuItem1ActionPerformed
+        expressionsTextPane.cut();
+    }//GEN-LAST:event_cutMenuItem1ActionPerformed
+
+    private void copyMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyMenuItem1ActionPerformed
+        expressionsTextPane.copy();
+    }//GEN-LAST:event_copyMenuItem1ActionPerformed
+
+    private void pasteMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteMenuItem1ActionPerformed
+        expressionsTextPane.paste();
+    }//GEN-LAST:event_pasteMenuItem1ActionPerformed
+
+    private void expressionsTextPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_expressionsTextPaneMouseReleased
+        if (evt.isPopupTrigger()) {
+            rightClickMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_expressionsTextPaneMouseReleased
 
     public static void main(String args[]) {
         try {
@@ -283,9 +286,8 @@ public class Calculon extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenuItem copyMenuItem;
-    private javax.swing.JMenuItem cutMenuItem;
-    private javax.swing.JMenu editMenu;
+    private javax.swing.JMenuItem copyMenuItem1;
+    private javax.swing.JMenuItem cutMenuItem1;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JTextPane expressionsTextPane;
     private javax.swing.JMenu fileMenu;
@@ -293,8 +295,9 @@ public class Calculon extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem pasteMenuItem;
+    private javax.swing.JMenuItem pasteMenuItem1;
     private javax.swing.JTextPane resultsTextPane;
+    private javax.swing.JPopupMenu rightClickMenu;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JSplitPane splitPane;
     private javax.swing.JLabel statusBar;

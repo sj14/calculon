@@ -1,6 +1,9 @@
 package io.github.sj14.calculon;
 
 import java.awt.ComponentOrientation;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,9 +13,14 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
+import javax.swing.text.JTextComponent;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
@@ -225,6 +233,7 @@ public class Calculon extends javax.swing.JFrame {
     }//GEN-LAST:event_redoMenuItemActionPerformed
 
     private static final UndoManager undoManager = new UndoManager();
+    private static final int MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 
     public static void main(String args[]) {
         try {
@@ -234,28 +243,8 @@ public class Calculon extends javax.swing.JFrame {
         }
 
         Calculon app = new Calculon();
-
-        // Read History
-        try {
-            List<String> read = Files.readAllLines(historyPath());
-            StringBuilder oldHistory = new StringBuilder();
-            for (String h : read) {
-                oldHistory.append(h).append(System.lineSeparator());
-            }
-            oldHistory.setLength(oldHistory.length() - 1); // remove last line break
-            app.expressionsTextPane.setText(oldHistory.toString());
-        } catch (Exception ex) {
-            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        // Add undo and redo function
-        app.expressionsTextPane.getDocument().addUndoableEditListener(new UndoableEditListener() {
-            @Override
-            public void undoableEditHappened(UndoableEditEvent e) {
-                undoManager.addEdit(e.getEdit());
-                Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, e);
-            }
-        });
+        readHistory(app.expressionsTextPane);
+        initUndoManager(app.expressionsTextPane);
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -276,6 +265,60 @@ public class Calculon extends javax.swing.JFrame {
                 saveHistory(app.expressionsTextPane.getText().strip());
             }
         });
+    }
+
+    private static void readHistory(JTextComponent textComponent) {
+        try {
+            List<String> read = Files.readAllLines(historyPath());
+            StringBuilder oldHistory = new StringBuilder();
+            for (String h : read) {
+                oldHistory.append(h).append(System.lineSeparator());
+            }
+            oldHistory.setLength(oldHistory.length() - 1); // remove last line break
+            textComponent.setText(oldHistory.toString());
+        } catch (Exception ex) {
+            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    // https://stackoverflow.com/a/24438161
+    private static void initUndoManager(JTextComponent textComponent) {
+        textComponent.getDocument().addUndoableEditListener(new UndoableEditListener() {
+            @Override
+            public void undoableEditHappened(UndoableEditEvent e) {
+                undoManager.addEdit(e.getEdit());
+                Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, e);
+            }
+        });
+
+        textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, MASK), "Undo");
+
+        textComponent.getActionMap().put("Undo", new AbstractAction("Undo") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                try {
+                    if (undoManager.canUndo()) {
+                        undoManager.undo();
+                    }
+                } catch (CannotUndoException e) {
+                    System.out.println(e);
+                }
+            }
+        });
+
+        textComponent.getActionMap().put("Redo", new AbstractAction("Redo") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                try {
+                    if (undoManager.canRedo()) {
+                        undoManager.redo();
+                    }
+                } catch (CannotRedoException e) {
+                    System.out.println(e);
+                }
+            }
+        });
+        textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, MASK), "Redo");
     }
 
     private static void saveHistory(String content) {

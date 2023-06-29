@@ -102,7 +102,6 @@ public class Calculon extends javax.swing.JFrame {
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
 
-        saveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         saveMenuItem.setMnemonic('s');
         saveMenuItem.setText("Save");
         saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -183,7 +182,7 @@ public class Calculon extends javax.swing.JFrame {
     }//GEN-LAST:event_pasteMenuItem1ActionPerformed
 
     private void expressionsTextPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_expressionsTextPaneMouseReleased
-        if (evt.isPopupTrigger()) {
+        if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
             rightClickMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_expressionsTextPaneMouseReleased

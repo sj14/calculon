@@ -1,5 +1,6 @@
 package io.github.sj14.calculon;
 
+import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -15,10 +16,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
@@ -111,7 +115,7 @@ public class Calculon extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Calculon");
 
-        splitPane.setDividerLocation(250);
+        splitPane.setDividerLocation(170);
         splitPane.setDividerSize(3);
 
         expressionsTextPane.setFont(expressionsTextPane.getFont().deriveFont((float)14));
@@ -182,7 +186,7 @@ public class Calculon extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(splitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
+                    .addComponent(splitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
                     .addComponent(statusBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -190,7 +194,7 @@ public class Calculon extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(splitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                .addComponent(splitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusBar)
                 .addContainerGap())
@@ -356,25 +360,43 @@ public class Calculon extends javax.swing.JFrame {
         // only adds "\n" instead of "\n\r" on windows too and then it won't match.
         String[] expressionsArray = expressionsTextPane.getText().split("\n");
 
-        double sum = 0;
-        int entries = 0;
         StringBuilder results = new StringBuilder();
 
-        for (String expression : expressionsArray) {
-            expression = expression.strip();
+        Style styleBlack = expressionsTextPane.addStyle("black", null);
+        StyleConstants.setForeground(styleBlack, Color.black);
 
-            try {
-                double evaluated = new ExpressionBuilder(expression).build().evaluate();
-                results.append(evaluated).append(System.lineSeparator());
-                sum += evaluated;
-                entries++;
-            } catch (Exception e) {
-                // keep lines in sync when calculation not possible
-                results.append(System.lineSeparator());
+        Style styleGray = expressionsTextPane.addStyle("gray", null);
+        StyleConstants.setForeground(styleGray, Color.gray);
+
+        Runnable doHighlight = new Runnable() {
+            @Override
+            public void run() {
+                double sum = 0;
+                int entries = 0;
+                int charsIndex = 0;
+
+                for (String expressionWithWhitespaces : expressionsArray) {
+                    String expression = expressionWithWhitespaces.strip();
+
+                    try {
+                        double evaluated = new ExpressionBuilder(expression).build().evaluate();
+                        results.append(evaluated).append(System.lineSeparator());
+                        sum += evaluated;
+                        entries++;
+                        expressionsTextPane.getStyledDocument().setCharacterAttributes(charsIndex, expression.length(), styleBlack, rootPaneCheckingEnabled);
+                    } catch (Exception e) {
+                        // keep lines in sync when calculation not possible
+                        results.append(System.lineSeparator());
+                        expressionsTextPane.getStyledDocument().setCharacterAttributes(charsIndex, expression.length(), styleGray, rootPaneCheckingEnabled);
+                    }
+
+                    charsIndex += expressionWithWhitespaces.length() + 2 - System.lineSeparator().length(); // the +2-lineSeperator makes it work for Windows and Mac
+                }
+                resultsTextPane.setText(results.toString());
+                statusBar.setText(String.format("entries: %d sum: %.2f", entries, sum));
             }
-        }
-        resultsTextPane.setText(results.toString());
-        statusBar.setText(String.format("entries: %d sum: %.2f", entries, sum));
+        };
+        SwingUtilities.invokeLater(doHighlight);
     }
 
     private static Path historyPath() {

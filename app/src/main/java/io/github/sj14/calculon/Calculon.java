@@ -1,6 +1,9 @@
 package io.github.sj14.calculon;
 
 import java.awt.ComponentOrientation;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,7 +13,15 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.text.JTextComponent;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 public class Calculon extends javax.swing.JFrame {
@@ -28,6 +39,14 @@ public class Calculon extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        rightClickMenuExpressions = new javax.swing.JPopupMenu();
+        undoMenuItem = new javax.swing.JMenuItem();
+        redoMenuItem = new javax.swing.JMenuItem();
+        cutMenuItem = new javax.swing.JMenuItem();
+        copyMenuItem = new javax.swing.JMenuItem();
+        pasteMenuItem = new javax.swing.JMenuItem();
+        rightClickMenuResults = new javax.swing.JPopupMenu();
+        copyItemResults = new javax.swing.JMenuItem();
         splitPane = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         expressionsTextPane = new javax.swing.JTextPane();
@@ -36,18 +55,58 @@ public class Calculon extends javax.swing.JFrame {
         statusBar = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        openMenuItem = new javax.swing.JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
-        saveAsMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
-        cutMenuItem = new javax.swing.JMenuItem();
-        copyMenuItem = new javax.swing.JMenuItem();
-        pasteMenuItem = new javax.swing.JMenuItem();
-        deleteMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
-        contentsMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
+
+        undoMenuItem.setText("Undo");
+        undoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoMenuItemActionPerformed(evt);
+            }
+        });
+        rightClickMenuExpressions.add(undoMenuItem);
+
+        redoMenuItem.setText("Redo");
+        redoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                redoMenuItemActionPerformed(evt);
+            }
+        });
+        rightClickMenuExpressions.add(redoMenuItem);
+
+        cutMenuItem.setText("Cut");
+        cutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cutMenuItemActionPerformed(evt);
+            }
+        });
+        rightClickMenuExpressions.add(cutMenuItem);
+
+        copyMenuItem.setText("Copy");
+        copyMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                copyMenuItemActionPerformed(evt);
+            }
+        });
+        rightClickMenuExpressions.add(copyMenuItem);
+
+        pasteMenuItem.setText("Paste");
+        pasteMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteMenuItemActionPerformed(evt);
+            }
+        });
+        rightClickMenuExpressions.add(pasteMenuItem);
+
+        copyItemResults.setText("Copy");
+        copyItemResults.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                copyItemResultsActionPerformed(evt);
+            }
+        });
+        rightClickMenuResults.add(copyItemResults);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Calculon");
@@ -56,9 +115,14 @@ public class Calculon extends javax.swing.JFrame {
         splitPane.setDividerSize(3);
 
         expressionsTextPane.setFont(expressionsTextPane.getFont().deriveFont((float)14));
-        expressionsTextPane.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                expressionsTextPaneKeyReleased(evt);
+        expressionsTextPane.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                expressionsTextPaneCaretUpdate(evt);
+            }
+        });
+        expressionsTextPane.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                expressionsTextPaneMouseReleased(evt);
             }
         });
         jScrollPane1.setViewportView(expressionsTextPane);
@@ -67,6 +131,11 @@ public class Calculon extends javax.swing.JFrame {
 
         resultsTextPane.setEditable(false);
         resultsTextPane.setFont(resultsTextPane.getFont().deriveFont((float)14));
+        resultsTextPane.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                resultsTextPaneMouseReleased(evt);
+            }
+        });
         jScrollPane2.setViewportView(resultsTextPane);
 
         splitPane.setRightComponent(jScrollPane2);
@@ -74,18 +143,15 @@ public class Calculon extends javax.swing.JFrame {
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
 
-        openMenuItem.setMnemonic('o');
-        openMenuItem.setText("Open");
-        fileMenu.add(openMenuItem);
-
+        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, SHORTCUT_MODIFIER));
         saveMenuItem.setMnemonic('s');
         saveMenuItem.setText("Save");
+        saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(saveMenuItem);
-
-        saveAsMenuItem.setMnemonic('a');
-        saveAsMenuItem.setText("Save As ...");
-        saveAsMenuItem.setDisplayedMnemonicIndex(5);
-        fileMenu.add(saveAsMenuItem);
 
         exitMenuItem.setMnemonic('x');
         exitMenuItem.setText("Exit");
@@ -98,33 +164,8 @@ public class Calculon extends javax.swing.JFrame {
 
         menuBar.add(fileMenu);
 
-        editMenu.setMnemonic('e');
-        editMenu.setText("Edit");
-
-        cutMenuItem.setMnemonic('t');
-        cutMenuItem.setText("Cut");
-        editMenu.add(cutMenuItem);
-
-        copyMenuItem.setMnemonic('y');
-        copyMenuItem.setText("Copy");
-        editMenu.add(copyMenuItem);
-
-        pasteMenuItem.setMnemonic('p');
-        pasteMenuItem.setText("Paste");
-        editMenu.add(pasteMenuItem);
-
-        deleteMenuItem.setMnemonic('d');
-        deleteMenuItem.setText("Delete");
-        editMenu.add(deleteMenuItem);
-
-        menuBar.add(editMenu);
-
         helpMenu.setMnemonic('h');
         helpMenu.setText("Help");
-
-        contentsMenuItem.setMnemonic('c');
-        contentsMenuItem.setText("Contents");
-        helpMenu.add(contentsMenuItem);
 
         aboutMenuItem.setMnemonic('a');
         aboutMenuItem.setText("About");
@@ -162,9 +203,60 @@ public class Calculon extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
-    private void expressionsTextPaneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_expressionsTextPaneKeyReleased
+    private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
+        saveHistory(expressionsTextPane.getText().strip());
+    }//GEN-LAST:event_saveMenuItemActionPerformed
+
+    private void expressionsTextPaneCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_expressionsTextPaneCaretUpdate
         setResults();
-    }//GEN-LAST:event_expressionsTextPaneKeyReleased
+    }//GEN-LAST:event_expressionsTextPaneCaretUpdate
+
+    private void cutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cutMenuItemActionPerformed
+        expressionsTextPane.cut();
+    }//GEN-LAST:event_cutMenuItemActionPerformed
+
+    private void copyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyMenuItemActionPerformed
+        expressionsTextPane.copy();
+    }//GEN-LAST:event_copyMenuItemActionPerformed
+
+    private void pasteMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteMenuItemActionPerformed
+        expressionsTextPane.paste();
+    }//GEN-LAST:event_pasteMenuItemActionPerformed
+
+    private void expressionsTextPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_expressionsTextPaneMouseReleased
+        if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
+            rightClickMenuExpressions.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_expressionsTextPaneMouseReleased
+
+    private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoMenuItemActionPerformed
+        try {
+            undoManager.undo();
+        } catch (Exception ex) {
+            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_undoMenuItemActionPerformed
+
+    private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redoMenuItemActionPerformed
+        try {
+            undoManager.redo();
+        } catch (Exception ex) {
+            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_redoMenuItemActionPerformed
+
+    private void copyItemResultsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyItemResultsActionPerformed
+        resultsTextPane.copy();
+    }//GEN-LAST:event_copyItemResultsActionPerformed
+
+    private void resultsTextPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultsTextPaneMouseReleased
+        if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
+            rightClickMenuResults.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_resultsTextPaneMouseReleased
+
+    private static final UndoManager undoManager = new UndoManager();
+    private static final int SHORTCUT_MODIFIER = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 
     public static void main(String args[]) {
         try {
@@ -174,18 +266,8 @@ public class Calculon extends javax.swing.JFrame {
         }
 
         Calculon app = new Calculon();
-
-        try {
-            List<String> read = Files.readAllLines(historyPath());
-            StringBuilder oldHistory = new StringBuilder();
-            for (String h : read) {
-                oldHistory.append(h).append(System.lineSeparator());
-            }
-            oldHistory.setLength(oldHistory.length() - 1); // remove last line break
-            app.expressionsTextPane.setText(oldHistory.toString());
-        } catch (Exception ex) {
-            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        readHistory(app.expressionsTextPane);
+        initUndoManager(app.expressionsTextPane);
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -201,14 +283,72 @@ public class Calculon extends javax.swing.JFrame {
         });
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
             public void run() {
-                try (PrintWriter out = new PrintWriter(historyPath().toString())) {
-                    out.println(app.expressionsTextPane.getText().strip());
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+                saveHistory(app.expressionsTextPane.getText().strip());
+            }
+        });
+    }
+
+    private static void readHistory(JTextComponent textComponent) {
+        try {
+            List<String> read = Files.readAllLines(historyPath());
+            StringBuilder oldHistory = new StringBuilder();
+            for (String h : read) {
+                oldHistory.append(h).append(System.lineSeparator());
+            }
+            oldHistory.setLength(oldHistory.length() - 1); // remove last line break
+            textComponent.setText(oldHistory.toString());
+        } catch (Exception ex) {
+            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    // https://stackoverflow.com/a/24438161
+    private static void initUndoManager(JTextComponent textComponent) {
+        textComponent.getDocument().addUndoableEditListener(new UndoableEditListener() {
+            @Override
+            public void undoableEditHappened(UndoableEditEvent e) {
+                undoManager.addEdit(e.getEdit());
+            }
+        });
+
+        textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, SHORTCUT_MODIFIER), "Undo");
+
+        textComponent.getActionMap().put("Undo", new AbstractAction("Undo") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                try {
+                    if (undoManager.canUndo()) {
+                        undoManager.undo();
+                    }
+                } catch (CannotUndoException e) {
+                    System.out.println(e);
                 }
             }
         });
+
+        textComponent.getActionMap().put("Redo", new AbstractAction("Redo") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                try {
+                    if (undoManager.canRedo()) {
+                        undoManager.redo();
+                    }
+                } catch (CannotRedoException e) {
+                    System.out.println(e);
+                }
+            }
+        });
+        textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, SHORTCUT_MODIFIER), "Redo");
+    }
+
+    private static void saveHistory(String content) {
+        try (PrintWriter out = new PrintWriter(historyPath().toString())) {
+            out.println(content);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void setResults() {
@@ -260,11 +400,9 @@ public class Calculon extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenuItem contentsMenuItem;
+    private javax.swing.JMenuItem copyItemResults;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
-    private javax.swing.JMenuItem deleteMenuItem;
-    private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JTextPane expressionsTextPane;
     private javax.swing.JMenu fileMenu;
@@ -272,12 +410,14 @@ public class Calculon extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pasteMenuItem;
+    private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JTextPane resultsTextPane;
-    private javax.swing.JMenuItem saveAsMenuItem;
+    private javax.swing.JPopupMenu rightClickMenuExpressions;
+    private javax.swing.JPopupMenu rightClickMenuResults;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JSplitPane splitPane;
     private javax.swing.JLabel statusBar;
+    private javax.swing.JMenuItem undoMenuItem;
     // End of variables declaration//GEN-END:variables
 }

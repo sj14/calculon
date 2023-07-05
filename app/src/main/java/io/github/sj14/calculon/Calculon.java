@@ -61,6 +61,8 @@ public class Calculon extends javax.swing.JFrame {
         fileMenu = new javax.swing.JMenu();
         saveMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
+        viewMenu = new javax.swing.JMenu();
+        alwayTopMenuItem = new javax.swing.JCheckBoxMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
 
@@ -168,6 +170,18 @@ public class Calculon extends javax.swing.JFrame {
 
         menuBar.add(fileMenu);
 
+        viewMenu.setText("View");
+
+        alwayTopMenuItem.setText("Always on top");
+        alwayTopMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                alwayTopMenuItemActionPerformed(evt);
+            }
+        });
+        viewMenu.add(alwayTopMenuItem);
+
+        menuBar.add(viewMenu);
+
         helpMenu.setMnemonic('h');
         helpMenu.setText("Help");
 
@@ -259,14 +273,20 @@ public class Calculon extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_resultsTextPaneMouseReleased
 
+    private void alwayTopMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alwayTopMenuItemActionPerformed
+        setAlwaysOnTop(alwayTopMenuItem.isSelected());
+    }//GEN-LAST:event_alwayTopMenuItemActionPerformed
+
     private static final UndoManager undoManager = new UndoManager();
     private static final int SHORTCUT_MODIFIER = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
         } catch (Exception ex) {
-            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Calculon.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         Calculon app = new Calculon();
@@ -303,8 +323,10 @@ public class Calculon extends javax.swing.JFrame {
             }
             oldHistory.setLength(oldHistory.length() - 1); // remove last line break
             textComponent.setText(oldHistory.toString());
+
         } catch (Exception ex) {
-            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Calculon.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -350,8 +372,10 @@ public class Calculon extends javax.swing.JFrame {
     private static void saveHistory(String content) {
         try (PrintWriter out = new PrintWriter(historyPath().toString())) {
             out.println(content);
+
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Calculon.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -412,8 +436,10 @@ public class Calculon extends javax.swing.JFrame {
         // create directories
         try {
             Files.createDirectories(Paths.get(path.toString()));
+
         } catch (IOException ex) {
-            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Calculon.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         // add filename
@@ -422,6 +448,7 @@ public class Calculon extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JCheckBoxMenuItem alwayTopMenuItem;
     private javax.swing.JMenuItem copyItemResults;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
@@ -441,5 +468,6 @@ public class Calculon extends javax.swing.JFrame {
     private javax.swing.JSplitPane splitPane;
     private javax.swing.JLabel statusBar;
     private javax.swing.JMenuItem undoMenuItem;
+    private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
 }

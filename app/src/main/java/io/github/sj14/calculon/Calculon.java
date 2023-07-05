@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -275,10 +276,13 @@ public class Calculon extends javax.swing.JFrame {
 
     private void alwayTopMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alwayTopMenuItemActionPerformed
         setAlwaysOnTop(alwayTopMenuItem.isSelected());
+        prefs.putBoolean(PREF_ALWAY_ON_TOP, alwayTopMenuItem.isSelected());
     }//GEN-LAST:event_alwayTopMenuItemActionPerformed
 
     private static final UndoManager undoManager = new UndoManager();
     private static final int SHORTCUT_MODIFIER = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+    private Preferences prefs = Preferences.userNodeForPackage(this.getClass());
+    private static final String PREF_ALWAY_ON_TOP = "window_always_on_top";
 
     public static void main(String args[]) {
         try {
@@ -292,6 +296,9 @@ public class Calculon extends javax.swing.JFrame {
         Calculon app = new Calculon();
         readHistory(app.expressionsTextPane);
         initUndoManager(app.expressionsTextPane);
+
+        app.alwayTopMenuItem.setSelected(app.prefs.getBoolean(PREF_ALWAY_ON_TOP, false));
+        app.alwayTopMenuItemActionPerformed(null); // trigger action once to set the right behavior
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

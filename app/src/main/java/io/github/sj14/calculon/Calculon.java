@@ -393,7 +393,7 @@ public class Calculon extends javax.swing.JFrame {
                     charsIndex += expressionWithWhitespaces.length() + 2 - System.lineSeparator().length(); // the +2-lineSeperator makes it work for Windows and Mac
                 }
                 resultsTextPane.setText(results.toString());
-                statusBar.setText(String.format("entries: %d sum: %.2f", entries, sum));
+                statusBar.setText(String.format("entries: %d | sum: %.2f", entries, sum));
             }
         };
         SwingUtilities.invokeLater(doHighlight);

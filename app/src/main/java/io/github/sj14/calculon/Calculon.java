@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -61,6 +62,8 @@ public class Calculon extends javax.swing.JFrame {
         fileMenu = new javax.swing.JMenu();
         saveMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
+        viewMenu = new javax.swing.JMenu();
+        alwayTopMenuItem = new javax.swing.JCheckBoxMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
 
@@ -168,6 +171,18 @@ public class Calculon extends javax.swing.JFrame {
 
         menuBar.add(fileMenu);
 
+        viewMenu.setText("View");
+
+        alwayTopMenuItem.setText("Always on top");
+        alwayTopMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                alwayTopMenuItemActionPerformed(evt);
+            }
+        });
+        viewMenu.add(alwayTopMenuItem);
+
+        menuBar.add(viewMenu);
+
         helpMenu.setMnemonic('h');
         helpMenu.setText("Help");
 
@@ -259,19 +274,31 @@ public class Calculon extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_resultsTextPaneMouseReleased
 
+    private void alwayTopMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alwayTopMenuItemActionPerformed
+        setAlwaysOnTop(alwayTopMenuItem.isSelected());
+        prefs.putBoolean(PREF_ALWAY_ON_TOP, alwayTopMenuItem.isSelected());
+    }//GEN-LAST:event_alwayTopMenuItemActionPerformed
+
     private static final UndoManager undoManager = new UndoManager();
     private static final int SHORTCUT_MODIFIER = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+    private Preferences prefs = Preferences.userNodeForPackage(this.getClass());
+    private static final String PREF_ALWAY_ON_TOP = "window_always_on_top";
 
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
         } catch (Exception ex) {
-            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Calculon.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         Calculon app = new Calculon();
         readHistory(app.expressionsTextPane);
         initUndoManager(app.expressionsTextPane);
+
+        app.alwayTopMenuItem.setSelected(app.prefs.getBoolean(PREF_ALWAY_ON_TOP, false));
+        app.alwayTopMenuItemActionPerformed(null); // trigger action once to set the right behavior
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -303,8 +330,10 @@ public class Calculon extends javax.swing.JFrame {
             }
             oldHistory.setLength(oldHistory.length() - 1); // remove last line break
             textComponent.setText(oldHistory.toString());
+
         } catch (Exception ex) {
-            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Calculon.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -350,8 +379,10 @@ public class Calculon extends javax.swing.JFrame {
     private static void saveHistory(String content) {
         try (PrintWriter out = new PrintWriter(historyPath().toString())) {
             out.println(content);
+
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Calculon.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -412,8 +443,10 @@ public class Calculon extends javax.swing.JFrame {
         // create directories
         try {
             Files.createDirectories(Paths.get(path.toString()));
+
         } catch (IOException ex) {
-            Logger.getLogger(Calculon.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Calculon.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         // add filename
@@ -422,6 +455,7 @@ public class Calculon extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JCheckBoxMenuItem alwayTopMenuItem;
     private javax.swing.JMenuItem copyItemResults;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
@@ -441,5 +475,6 @@ public class Calculon extends javax.swing.JFrame {
     private javax.swing.JSplitPane splitPane;
     private javax.swing.JLabel statusBar;
     private javax.swing.JMenuItem undoMenuItem;
+    private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
 }

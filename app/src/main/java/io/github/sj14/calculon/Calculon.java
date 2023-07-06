@@ -64,6 +64,8 @@ public class Calculon extends javax.swing.JFrame {
         exitMenuItem = new javax.swing.JMenuItem();
         viewMenu = new javax.swing.JMenu();
         alwayTopMenuItem = new javax.swing.JCheckBoxMenuItem();
+        increaseFontSizeMenuItem = new javax.swing.JMenuItem();
+        decreaseFontSizeMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
 
@@ -181,6 +183,24 @@ public class Calculon extends javax.swing.JFrame {
         });
         viewMenu.add(alwayTopMenuItem);
 
+        increaseFontSizeMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_PLUS, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        increaseFontSizeMenuItem.setText("Increase font size");
+        increaseFontSizeMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                increaseFontSizeMenuItemActionPerformed(evt);
+            }
+        });
+        viewMenu.add(increaseFontSizeMenuItem);
+
+        decreaseFontSizeMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_MINUS, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        decreaseFontSizeMenuItem.setText("Decrease font size");
+        decreaseFontSizeMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                decreaseFontSizeMenuItemActionPerformed(evt);
+            }
+        });
+        viewMenu.add(decreaseFontSizeMenuItem);
+
         menuBar.add(viewMenu);
 
         helpMenu.setMnemonic('h');
@@ -279,10 +299,26 @@ public class Calculon extends javax.swing.JFrame {
         prefs.putBoolean(PREF_ALWAY_ON_TOP, alwayTopMenuItem.isSelected());
     }//GEN-LAST:event_alwayTopMenuItemActionPerformed
 
+    private void increaseFontSizeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_increaseFontSizeMenuItemActionPerformed
+        increaseFontSize(1);
+    }//GEN-LAST:event_increaseFontSizeMenuItemActionPerformed
+
+    private void decreaseFontSizeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decreaseFontSizeMenuItemActionPerformed
+        increaseFontSize(-1);
+    }//GEN-LAST:event_decreaseFontSizeMenuItemActionPerformed
+
+    private void increaseFontSize(float incrementSize) {
+        float newFontSize = prefs.getFloat(PREF_FONT_SIZE, expressionsTextPane.getFont().getSize()) + incrementSize;
+        expressionsTextPane.setFont(expressionsTextPane.getFont().deriveFont(newFontSize));
+        resultsTextPane.setFont(resultsTextPane.getFont().deriveFont(newFontSize));
+        prefs.putFloat(PREF_FONT_SIZE, newFontSize);
+    }
+
     private static final UndoManager undoManager = new UndoManager();
     private static final int SHORTCUT_MODIFIER = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
     private Preferences prefs = Preferences.userNodeForPackage(this.getClass());
     private static final String PREF_ALWAY_ON_TOP = "window_always_on_top";
+    private static final String PREF_FONT_SIZE = "font_size";
 
     public static void main(String args[]) {
         try {
@@ -297,14 +333,17 @@ public class Calculon extends javax.swing.JFrame {
         readHistory(app.expressionsTextPane);
         initUndoManager(app.expressionsTextPane);
 
-        app.alwayTopMenuItem.setSelected(app.prefs.getBoolean(PREF_ALWAY_ON_TOP, false));
-        app.alwayTopMenuItemActionPerformed(null); // trigger action once to set the right behavior
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
+                app.alwayTopMenuItem.setSelected(app.prefs.getBoolean(PREF_ALWAY_ON_TOP, false));
+
+                // trigger actions once to set the right behavior
+                app.alwayTopMenuItemActionPerformed(null);
+                app.increaseFontSize(0);
                 app.setResults();
+
                 app.resultsTextPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                 app.statusBar.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                 app.pack();
@@ -346,8 +385,6 @@ public class Calculon extends javax.swing.JFrame {
             }
         });
 
-        textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, SHORTCUT_MODIFIER), "Undo");
-
         textComponent.getActionMap().put("Undo", new AbstractAction("Undo") {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -360,6 +397,8 @@ public class Calculon extends javax.swing.JFrame {
                 }
             }
         });
+
+        textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, SHORTCUT_MODIFIER), "Undo");
 
         textComponent.getActionMap().put("Redo", new AbstractAction("Redo") {
             @Override
@@ -459,10 +498,12 @@ public class Calculon extends javax.swing.JFrame {
     private javax.swing.JMenuItem copyItemResults;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
+    private javax.swing.JMenuItem decreaseFontSizeMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JTextPane expressionsTextPane;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenuItem increaseFontSizeMenuItem;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenuBar menuBar;

@@ -316,9 +316,31 @@ public class Calculon extends javax.swing.JFrame {
 
     private static final UndoManager undoManager = new UndoManager();
     private static final int SHORTCUT_MODIFIER = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-    private Preferences prefs = Preferences.userNodeForPackage(this.getClass());
+    private final Preferences prefs = Preferences.userNodeForPackage(this.getClass());
     private static final String PREF_ALWAY_ON_TOP = "window_always_on_top";
     private static final String PREF_FONT_SIZE = "font_size";
+    private static final String PREF_WINDOW_HEIGHT = "window_height";
+    private static final String PREF_WINDOW_WIDTH = "window_width";
+    private static final String PREF_WINDOW_X = "window_x";
+    private static final String PREF_WINDOW_Y = "window_y";
+
+    private static final String PREF_WINDOW_DIVIER_LOCATION = "window_divider_location";
+
+    private void storeWindowSize() {
+        prefs.putInt(PREF_WINDOW_WIDTH, this.getWidth());
+        prefs.putInt(PREF_WINDOW_HEIGHT, this.getHeight());
+        prefs.putInt(PREF_WINDOW_DIVIER_LOCATION, splitPane.getDividerLocation());
+        prefs.putInt(PREF_WINDOW_X, getX());
+        prefs.putInt(PREF_WINDOW_Y, getY());
+    }
+
+    private void restoreWindowSize() {
+        int width = prefs.getInt(PREF_WINDOW_WIDTH, this.getWidth());
+        int height = prefs.getInt(PREF_WINDOW_HEIGHT, this.getHeight());
+        this.setSize(width, height);
+        splitPane.setDividerLocation(prefs.getInt(PREF_WINDOW_DIVIER_LOCATION, splitPane.getDividerLocation()));
+        this.setLocation(prefs.getInt(PREF_WINDOW_X, 0), (prefs.getInt(PREF_WINDOW_Y, 0)));
+    }
 
     public static void main(String args[]) {
         try {
@@ -346,8 +368,8 @@ public class Calculon extends javax.swing.JFrame {
 
                 app.resultsTextPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                 app.statusBar.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                app.pack();
                 app.setLocationRelativeTo(null);
+                app.restoreWindowSize();
                 app.setVisible(true);
             }
         });
@@ -356,6 +378,7 @@ public class Calculon extends javax.swing.JFrame {
             @Override
             public void run() {
                 saveHistory(app.expressionsTextPane.getText().strip());
+                app.storeWindowSize();
             }
         });
     }

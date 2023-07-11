@@ -56,9 +56,9 @@ jobs:
       - name: Build Windows
         if: runner.os == 'Windows'
         run: |
-          set appver=%date:~6,2%.%date:~3,2%.%date:~0,2%%time:~0,2%
-          jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.ico --app-version %appver%
-          mv Calculon-%appver%.exe Calculon.exe
+          $env:APPVER=%date:~6,2%.%date:~3,2%.%date:~0,2%%time:~0,2%
+          jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.ico --app-version $env:APPVER
+          mv Calculon-$env:APPVER.exe Calculon.exe
           git status
       # - name: Build macOS
       #   if: runner.os == 'macos'

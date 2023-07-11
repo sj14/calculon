@@ -56,11 +56,12 @@ jobs:
       - name: Build Windows
         if: runner.os == 'Windows'
         run: |
-          $env:APPVER=[int32](New-TimeSpan -Start (Get-Date "01/07/2023") -End (Get-Date)).TotalDays
-          $env:APPVER=echo 1.0.$env:APPVER
-          echo $env:APPVER
-          jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.ico --app-version $env:APPVER
-          mv Calculon-$env:APPVER.exe Calculon.exe
+          # $env:APPVER=[int32](New-TimeSpan -Start (Get-Date "01/07/2023") -End (Get-Date)).TotalDays
+          # $env:APPVER=echo 1.0.$env:APPVER
+          # echo $env:APPVER
+          jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.ico --type msi    # --app-version $env:APPVER
+          # mv Calculon-$env:APPVER.msi Calculon.msi
+          mv Calculon-1.0.msi Calculon.msi
           git status
       # - name: Build macOS
       #   if: runner.os == 'macos'
@@ -76,7 +77,7 @@ jobs:
           path: |
             Calculon.dmg
             calculon_amd64.deb
-            Calculon.exe
+            Calculon.msi
       # - name: Upload to the release
       #   uses: softprops/action-gh-release@v1
       #   if: startsWith(github.ref, 'refs/tags/')
@@ -85,4 +86,4 @@ jobs:
       #       app/build/libs/Calculon.jar
       #       Calculon.dmg
       #       calculon_amd64.deb
-      #       Calculon.exe
+      #       Calculon.msi

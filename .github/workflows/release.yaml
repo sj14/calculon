@@ -55,9 +55,13 @@ jobs:
           git status
       - name: Build Windows
         if: runner.os == 'Windows'
+        # jpackage needs a version for installing newer versions https://stackoverflow.com/a/62819060/7125878
         run: |
-          jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.ico
-          mv Calculon-1.0.exe Calculon.exe
+          $env:APPVER=[int32](New-TimeSpan -Start (Get-Date "01/07/2023") -End (Get-Date)).TotalDays
+          $env:APPVER=echo 1.0.$env:APPVER
+          echo $env:APPVER
+          jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.ico --app-version $env:APPVER
+          mv Calculon-$env:APPVER.exe Calculon.exe
           git status
       - name: Build macOS
         if: runner.os == 'macos'

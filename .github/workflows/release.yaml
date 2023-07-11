@@ -2,8 +2,8 @@ name: Release
 
 on:
   push:
-    # tags:
-    #   - "**"
+    tags:
+      - "**"
 
 jobs:
   jar:
@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest] # [ubuntu-22.04, windows-latest, macos-latest]
+        os: [ubuntu-22.04, windows-latest, macos-latest]
     name: Release
     runs-on: ${{ matrix.os }}
     steps:
@@ -47,29 +47,29 @@ jobs:
           distribution: "temurin"
           java-version: "20"
           cache: "gradle"
-      # - name: Build Linux
-      #   if: runner.os == 'Linux'
-      #   run: |
-      #     jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.png
-      #     mv calculon_1.0_amd64.deb calculon_amd64.deb
-      #     git status
+      - name: Build Linux
+        if: runner.os == 'Linux'
+        run: |
+          jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.png
+          mv calculon_1.0_amd64.deb calculon_amd64.deb
+          git status
       - name: Build Windows
         if: runner.os == 'Windows'
+        # jpackage needs a version for installing newer versions https://stackoverflow.com/a/62819060/7125878
         run: |
-          # $env:APPVER=[int32](New-TimeSpan -Start (Get-Date "01/07/2023") -End (Get-Date)).TotalDays
-          # $env:APPVER=echo 1.0.$env:APPVER
-          # echo $env:APPVER
-          jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.ico --type msi    # --app-version $env:APPVER
-          # mv Calculon-$env:APPVER.msi Calculon.msi
-          mv Calculon-1.0.msi Calculon.msi
+          $env:APPVER=[int32](New-TimeSpan -Start (Get-Date "01/07/2023") -End (Get-Date)).TotalDays
+          $env:APPVER=echo 1.0.$env:APPVER
+          echo $env:APPVER
+          jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.ico --app-version $env:APPVER
+          mv Calculon-$env:APPVER.exe Calculon.exe
           git status
-      # - name: Build macOS
-      #   if: runner.os == 'macos'
-      #   run: |
-      #     jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.icns
-      #     mv Calculon-1.0.dmg Calculon.dmg
-      #     git status
-      # Upload to the workflow summary (useful when testing and disabling the 'push/tag' filter)
+      - name: Build macOS
+        if: runner.os == 'macos'
+        run: |
+          jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.icns
+          mv Calculon-1.0.dmg Calculon.dmg
+          git status
+      Upload to the workflow summary (useful when testing and disabling the 'push/tag' filter)
       - uses: actions/upload-artifact@v3
         name: Upload to workflow summary
         with:
@@ -77,13 +77,13 @@ jobs:
           path: |
             Calculon.dmg
             calculon_amd64.deb
-            Calculon.msi
-      # - name: Upload to the release
-      #   uses: softprops/action-gh-release@v1
-      #   if: startsWith(github.ref, 'refs/tags/')
-      #   with:
-      #     files: |
-      #       app/build/libs/Calculon.jar
-      #       Calculon.dmg
-      #       calculon_amd64.deb
-      #       Calculon.msi
+            Calculon.exe
+      - name: Upload to the release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            app/build/libs/Calculon.jar
+            Calculon.dmg
+            calculon_amd64.deb
+            Calculon.exe

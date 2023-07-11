@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, windows-latest, macos-latest]
+        os: [ubuntu-22.04] #, windows-latest, macos-latest]
     name: Release
     runs-on: ${{ matrix.os }}
     steps:
@@ -56,7 +56,7 @@ jobs:
       - name: Build Windows
         if: runner.os == 'Windows'
         run: |
-          $env:APPVER=%date:~6,2%.%date:~3,2%.%date:~0,2%%time:~0,2%
+          $env:APPVER=[int32](New-TimeSpan -Start (Get-Date "01/01/1970") -End (Get-Date)).TotalSeconds
           jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.ico --app-version $env:APPVER
           mv Calculon-$env:APPVER.exe Calculon.exe
           git status

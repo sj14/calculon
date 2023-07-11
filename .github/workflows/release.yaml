@@ -69,7 +69,7 @@ jobs:
           jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.icns
           mv Calculon-1.0.dmg Calculon.dmg
           git status
-      Upload to the workflow summary (useful when testing and disabling the 'push/tag' filter)
+      # Upload to the workflow summary (useful when testing and disabling the 'push/tag' filter)
       - uses: actions/upload-artifact@v3
         name: Upload to workflow summary
         with:

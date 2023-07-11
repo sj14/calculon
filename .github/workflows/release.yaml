@@ -57,6 +57,8 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           $env:APPVER=[int32](New-TimeSpan -Start (Get-Date "01/01/1970") -End (Get-Date)).TotalSeconds
+          $env:APPVER=echo 1.0.$env:APPVER
+          echo $env:APPVER
           jpackage -i ./app/build/libs/ -n Calculon --main-class io.github.sj14.calculon.Calculon --main-jar app.jar --icon assets/calculon.ico --app-version $env:APPVER
           mv Calculon-$env:APPVER.exe Calculon.exe
           git status

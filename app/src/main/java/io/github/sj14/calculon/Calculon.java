@@ -368,6 +368,7 @@ public class Calculon extends javax.swing.JFrame {
 
                 app.resultsTextPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                 app.statusBar.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                app.pack();
                 app.setLocationRelativeTo(null);
                 app.restoreWindowSize();
                 app.setVisible(true);

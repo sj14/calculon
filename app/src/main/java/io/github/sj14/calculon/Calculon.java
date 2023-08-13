@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -323,8 +324,8 @@ public class Calculon extends javax.swing.JFrame {
     private static final String PREF_WINDOW_WIDTH = "window_width";
     private static final String PREF_WINDOW_X = "window_x";
     private static final String PREF_WINDOW_Y = "window_y";
-
     private static final String PREF_WINDOW_DIVIER_LOCATION = "window_divider_location";
+    private static final DecimalFormat decimalFormat = new DecimalFormat("0");
 
     private void storeWindowSize() {
         prefs.putInt(PREF_WINDOW_WIDTH, this.getWidth());
@@ -351,6 +352,7 @@ public class Calculon extends javax.swing.JFrame {
                     .getName()).log(Level.SEVERE, null, ex);
         }
 
+        decimalFormat.setMaximumFractionDigits(340); // 340 = DecimalFormat.DOUBLE_FRACTION_DIGITS
         Calculon app = new Calculon();
         readHistory(app.expressionsTextPane);
         initUndoManager(app.expressionsTextPane);
@@ -474,7 +476,7 @@ public class Calculon extends javax.swing.JFrame {
 
                     try {
                         double evaluated = new ExpressionBuilder(expression).build().evaluate();
-                        results.append(evaluated).append(System.lineSeparator());
+                        results.append(decimalFormat.format(evaluated)).append(System.lineSeparator());
                         sum += evaluated;
                         entries++;
                         expressionsTextPane.getStyledDocument().setCharacterAttributes(charsIndex, expression.length(), styleBlack, rootPaneCheckingEnabled);
@@ -487,7 +489,7 @@ public class Calculon extends javax.swing.JFrame {
                     charsIndex += expressionWithWhitespaces.length() + 2 - System.lineSeparator().length(); // the +2-lineSeperator makes it work for Windows and Mac
                 }
                 resultsTextPane.setText(results.toString());
-                statusBar.setText(String.format("entries: %d | sum: %.2f", entries, sum));
+                statusBar.setText(String.format("entries: %d | sum: %s", entries, decimalFormat.format(sum)));
             }
         };
         SwingUtilities.invokeLater(doHighlight);

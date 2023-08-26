@@ -56,9 +56,10 @@ jobs:
       - name: Build Windows
         if: runner.os == 'Windows'
         # jpackage needs a version for installing newer versions https://stackoverflow.com/a/62819060/7125878
+        # max: 255.255.65535 https://bugs.openjdk.org/browse/JDK-8283707
         run: |
-          $env:YEAR=(Get-Date).Year
-          $env:DAY=(Get-Date).DayOfYear
+          $env:YEAR=(Get-Date).Year-2000
+          $env:DAY=[math]::Round((Get-Date).DayOfYear/1.5)
           $env:MINUTE=[int32](Get-Date).TimeOfDay.TotalMinutes
           $env:APPVER=echo "$env:YEAR.$env:DAY.$env:MINUTE"
           echo $env:APPVER

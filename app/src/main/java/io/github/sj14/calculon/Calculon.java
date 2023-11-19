@@ -12,7 +12,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -325,7 +327,7 @@ public class Calculon extends javax.swing.JFrame {
     private static final String PREF_WINDOW_X = "window_x";
     private static final String PREF_WINDOW_Y = "window_y";
     private static final String PREF_WINDOW_DIVIER_LOCATION = "window_divider_location";
-    private static final DecimalFormat decimalFormat = new DecimalFormat("0");
+    private static final DecimalFormat decimalFormat = new DecimalFormat("0",new DecimalFormatSymbols(Locale.getDefault()));
 
     private void storeWindowSize() {
         prefs.putInt(PREF_WINDOW_WIDTH, this.getWidth());

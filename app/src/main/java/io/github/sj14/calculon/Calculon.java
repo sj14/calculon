@@ -454,7 +454,7 @@ public class Calculon extends javax.swing.JFrame {
     private void setResults() {
         // needs to be "\n" instead of  System.lineSeparator() as sometimes it 
         // only adds "\n" instead of "\n\r" on windows too and then it won't match.
-        String[] expressionsArray = expressionsTextPane.getText().split("\n");
+        String[] expressionsArray = expressionsTextPane.getText().split("\\R");
 
         StringBuilder results = new StringBuilder();
 
